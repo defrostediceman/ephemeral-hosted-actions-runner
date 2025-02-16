@@ -56,12 +56,12 @@ RUN sed -i \
 # Set ownership
 RUN chown -R runner:runner /home/runner
 
-USER runner
-
 RUN sudo systemctl enable \
         cleanup.service \
         cleanup.timer \
         github-runner.service
+
+USER runner
 
 # Use systemd as entrypoint
 ENTRYPOINT ["/sbin/init"]
