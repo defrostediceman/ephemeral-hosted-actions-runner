@@ -22,9 +22,9 @@ A self-hosted GitHub Actions runner using rootful podman with systemd integratio
 
 The container expects the following files in the `/etc/systemd/system` directory. These files are included in the container image on build.
 
-- /etc/systemd/system/github-runner.service
-- /etc/systemd/system/cleanup.service
-- /etc/systemd/system/cleanup.timer
+- `/etc/systemd/system/github-runner.service`
+- `/etc/systemd/system/cleanup.service`
+- `/etc/systemd/system/cleanup.timer`
 
 Additionally, a cleanup script should be provided at cleanup.sh in the `/usr/local/bin` directory. This script will be used to clean up the container resources.
 
@@ -67,9 +67,9 @@ podman run -d \
 ## System Services
 
 The container runs two main services:
-1. github-runner.service: Manages the GitHub Actions runner
-2. cleanup.service: Handles periodic system cleanup
-3. cleanup.timer: Triggers the cleanup service daily
+1. `github-runner.service`: Manages the GitHub Actions runner
+2. `cleanup.service`: Handles periodic system cleanup
+3. `cleanup.timer`: Triggers the cleanup service daily
 
 ## Logging
 

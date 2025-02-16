@@ -21,7 +21,6 @@ RUN dnf update --assumeyes --allowerasing && \
         jq \
         podman \
         buildah \
-        cronie \
         systemd \
         systemd-libs && \
     dnf autoremove --assumeyes && \
@@ -43,9 +42,7 @@ RUN curl -o actions-runner-linux-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz -L \
 # Setup cron job for cleanup
 COPY cleanup.sh /usr/local/bin/cleanup
 
-RUN chmod +x /usr/local/bin/cleanup && \
-echo "0 0 * * * /cleanup.sh > /var/log/cleanup.log 2>&1" > /etc/cron.d/cleanup-cron && \
-    chmod 0644 /etc/cron.d/cleanup-cron
+RUN chmod +x /usr/local/bin/cleanup
 
 # inject the repo url and token into the github-runner.service file
 RUN sed -i \
