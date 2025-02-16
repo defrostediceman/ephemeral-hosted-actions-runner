@@ -1,0 +1,11 @@
+[Unit]
+Description=Program to cleanup the runner
+
+[Service]
+Type=oneshot
+User=runner
+WorkingDirectory=/home/runner
+ExecStart=/usr/local/bin/cleanup
+
+[Install]
+WantedBy=multi-user.target

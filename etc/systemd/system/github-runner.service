@@ -1,0 +1,15 @@
+[Unit]
+Description=GitHub Actions Runner
+After=network.target\n\
+
+[Service]
+Type=simple
+User=runner
+Environment="REPO_URL=${REPO_URL}"
+Environment="TOKEN=${TOKEN}"
+WorkingDirectory=/home/runner
+ExecStart=/home/runner/config.sh --url "${REPO_URL}" --token "${TOKEN}" --unattended --replace --ephemeral --work "_work" --runasservice
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
