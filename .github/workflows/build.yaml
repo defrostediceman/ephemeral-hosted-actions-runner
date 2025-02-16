@@ -44,7 +44,8 @@ jobs:
       - name: Login to GHCR
         run: |
           sudo mkdir -p /root/.docker
-          sudo echo '{"auths":{}}' > /root/.docker/config.json
+          sudo touch /root/.docker/config.json
+          echo '{"auths":{}}' | sudo tee -a /root/.docker/config.json
           echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
@@ -57,3 +58,4 @@ jobs:
         run: |
           sudo podman logout ${{ env.REGISTRY }}
           sudo podman system prune -af
+          sudo rm -rf /root/.docker
