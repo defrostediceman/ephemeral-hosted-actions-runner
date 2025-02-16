@@ -1,7 +1,7 @@
 FROM quay.io/centos/centos:stream9
 
 ARG REPO_URL=https://github.com/defrostediceman/ephemeral-hosted-actions-runner
-ARG TOKEN=ASYLCU75FJBDM7BPUWMLVILHWIVXK
+ARG TOKEN=ASYLCU75FJBDM7BPUWMLVILHWIVXKK
 ARG RUNNER_VERSION=2.314.1
 ARG RUNNER_ARCH="x64"
 
@@ -30,8 +30,7 @@ RUN dnf update --assumeyes --allowerasing && \
 
 # Create runner user and setup permissions
 RUN useradd -m runner && \
-    usermod -aG wheel runner && \
-    loginctl enable-linger runner
+    usermod -aG wheel runner
 
 WORKDIR /home/runner
 
