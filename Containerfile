@@ -30,7 +30,7 @@ RUN dnf update --assumeyes --allowerasing && \
 
 # Create runner user and setup permissions
 RUN useradd -m runner && \
-    usermod -aG wheel runner &&
+    usermod -aG wheel runner && \
     loginctl enable-linger runner
 
 WORKDIR /home/runner
