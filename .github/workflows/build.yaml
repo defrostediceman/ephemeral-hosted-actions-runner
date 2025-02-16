@@ -20,42 +20,40 @@ jobs:
       IMAGE_NAME: ${{ github.event.repository.name }}
       REGISTRY: ghcr.io/${{ github.repository_owner }}
       REPO_URL: https://github.com/defrostediceman/ephemeral-hosted-actions-runner
-      TOKEN: ASYLCU75FJBDM7BPUWMLVILHWIVXK
+      TOKEN: YOU_SHOULD_USE_A_SECRET_HERE
    
     steps:
       - name: Clone the repository
         uses: actions/checkout@v4
 
-      - name: Use buildah bud to create the image
-        id: build-image
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: latest ${{ github.sha }}
-          containerfiles: |
-            ./Containerfile
-          build-args: |
-            REPO_URL=${{ env.REPO_URL }}
-            TOKEN=${{ env.TOKEN }}
-
-      - name: Workaround open podman-login action issue
-        env:
-          auth: '{ "auths": {} }'
+      - name: Install Podman
         run: |
-          mkdir -p $HOME/.docker
-          echo "$auth" > $HOME/.docker/config.json
+          sudo apt-get update
+          sudo apt-get install -y podman
+          podman --version
 
-      - name: Log in to the GitHub Container registry
-        uses: redhat-actions/podman-login@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build image
+        run: |
+          sudo podman build \
+            --build-arg REPO_URL=${{ env.REPO_URL }} \
+            --build-arg TOKEN=${{ env.TOKEN }} \
+            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -f ./Containerfile .
 
-      - name: Push to GitHub Container Repository
-        id: push-to-ghcr
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-image.outputs.image }}
-          tags: ${{ steps.build-image.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+      - name: Login to GHCR
+        run: |
+          mkdir -p /root/.docker
+          echo '{"auths":{}}' > /root/.docker/config.json
+          echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          sudo podman push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Cleanup
+        if: always()
+        run: |
+          sudo podman logout ${{ env.REGISTRY }}
+          sudo podman system prune -af

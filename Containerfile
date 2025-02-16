@@ -1,7 +1,7 @@
 FROM quay.io/centos/centos:stream9
 
 ARG REPO_URL=https://github.com/defrostediceman/ephemeral-hosted-actions-runner
-ARG TOKEN=ASYLCU75FJBDM7BPUWMLVILHWIVXKK
+ARG TOKEN=YOU_SHOULD_USE_A_SECRET_HERE
 ARG RUNNER_VERSION=2.314.1
 ARG RUNNER_ARCH="x64"
 
@@ -58,7 +58,7 @@ RUN chown -R runner:runner /home/runner
 
 USER runner
 
-RUN systemctl enable --user \
+RUN sudo systemctl enable \
         cleanup.service \
         cleanup.timer \
         github-runner.service
