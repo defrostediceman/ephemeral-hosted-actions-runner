@@ -43,8 +43,8 @@ jobs:
 
       - name: Login to GHCR
         run: |
-          mkdir -p /root/.docker
-          echo '{"auths":{}}' > /root/.docker/config.json
+          sudo mkdir -p /root/.docker
+          sudo echo '{"auths":{}}' > /root/.docker/config.json
           echo ${{ secrets.GITHUB_TOKEN }} | sudo podman login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
