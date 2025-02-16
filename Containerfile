@@ -56,7 +56,7 @@ RUN sed -i \
 # Set ownership
 RUN chown -R runner:runner /home/runner
 
-RUN sudo systemctl enable \
+RUN systemctl enable \
         cleanup.service \
         cleanup.timer \
         github-runner.service
