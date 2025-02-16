@@ -30,8 +30,7 @@ RUN dnf update --assumeyes --allowerasing && \
 
 # Create runner user and setup permissions
 RUN useradd -m runner && \
-    usermod -aG wheel runner && \
-    echo "runner ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/wheel-nopasswd
+    usermod -aG wheel runner
 
 WORKDIR /home/runner
 
