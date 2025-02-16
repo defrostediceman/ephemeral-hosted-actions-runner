@@ -60,6 +60,7 @@ podman run -d \
     --tmpfs /var/tmp \
     --tmpfs /home/runner/_work \
     --systemd=always \
+    --user=runner \
     ghcr.io/defrostediceman/ephemeral-hosted-actions-runner:latest
 ```
 

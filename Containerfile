@@ -30,7 +30,8 @@ RUN dnf update --assumeyes --allowerasing && \
 
 # Create runner user and setup permissions
 RUN useradd -m runner && \
-    usermod -aG wheel runner
+    usermod -aG wheel runner &&
+    loginctl enable-linger runner
 
 WORKDIR /home/runner
 
@@ -58,7 +59,7 @@ RUN chown -R runner:runner /home/runner
 
 USER runner
 
-RUN sudo systemctl enable \
+RUN systemctl enable --user \
         cleanup.service \
         cleanup.timer \
         github-runner.service
